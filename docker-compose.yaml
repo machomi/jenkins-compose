@@ -1,0 +1,27 @@
+version: '3'
+services:
+  jenkins-master:
+    image: jenkins/jenkins:lts
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - jenkins_home:/var/jenkins_home
+    networks:
+      - jenkins-network
+
+  jenkins-slave:
+    image: jenkins/inbound-agent
+    environment:
+      - JENKINS_URL=http://jenkins-master:8080
+      - JENKINS_SECRET=a218d2d89f4cc905753ceab9b5893605d9e67a01f2dce75596e2ef76440e7902
+      - JENKINS_AGENT_NAME=jenkins-slave
+      - JENKINS_AGENT_WORKDIR=/home/jenkins/agent
+    networks:
+      - jenkins-network
+
+networks:
+  jenkins-network:
+
+volumes:
+  jenkins_home:
